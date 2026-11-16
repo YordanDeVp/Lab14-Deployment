@@ -6,11 +6,32 @@ using Lab11_Sapacayo_Yordan.Infrastructure.Context;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Configura ConnectionStrings:DefaultConnection.");
+
+if (Uri.TryCreate(connectionString, UriKind.Absolute, out var databaseUri)
+    && (databaseUri.Scheme == "postgres" || databaseUri.Scheme == "postgresql"))
+{
+    var credentials = databaseUri.GetComponents(UriComponents.UserInfo, UriFormat.UriEscaped).Split(':', 2);
+    if (credentials.Length != 2)
+    {
+        throw new InvalidOperationException("La URL de PostgreSQL debe incluir usuario y contraseña.");
+    }
+
+    connectionString = new NpgsqlConnectionStringBuilder
+    {
+        Host = databaseUri.Host,
+        Port = databaseUri.Port < 0 ? 5432 : databaseUri.Port,
+        Database = Uri.UnescapeDataString(databaseUri.AbsolutePath.TrimStart('/')),
+        Username = Uri.UnescapeDataString(credentials[0]),
+        Password = Uri.UnescapeDataString(credentials[1]),
+        SslMode = SslMode.Require
+    }.ConnectionString;
+}
 
 builder.Services.AddInfrastructureServices(connectionString);
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetUserQuery).Assembly));
