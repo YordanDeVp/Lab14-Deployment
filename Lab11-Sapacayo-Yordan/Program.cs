@@ -2,7 +2,9 @@ using Lab11_Sapacayo_Yordan.Middleware;
 using Lab11_Sapacayo_Yordan.Application.UseCases.Users.Queries;
 using Lab11_Sapacayo_Yordan.Application.Mappings;
 using Lab11_Sapacayo_Yordan.Infrastructure.Configuration;
+using Lab11_Sapacayo_Yordan.Infrastructure.Context;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +27,12 @@ builder.Services.AddSwaggerGen(options => options.SwaggerDoc("v1", new OpenApiIn
 }));
 
 var app = builder.Build();
+
+if (builder.Configuration.GetValue<bool>("Database:ApplyMigrationsOnStartup"))
+{
+    await using var scope = app.Services.CreateAsyncScope();
+    await scope.ServiceProvider.GetRequiredService<TicketeraContext>().Database.MigrateAsync();
+}
 
 app.UseExceptionHandler();
 
