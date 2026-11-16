@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Lab11_Sapacayo_Yordan.Application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lab11-Sapacayo-Yordan.Domain\Lab11-Sapacayo-Yordan.Domain.csproj" />
+    <PackageReference Include="MediatR" Version="14.2.0" />
+    <PackageReference Include="AutoMapper" Version="16.2.0" />
+  </ItemGroup>
+</Project>

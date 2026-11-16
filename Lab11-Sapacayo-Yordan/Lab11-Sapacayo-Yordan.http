@@ -1,0 +1,4 @@
+@Lab11_Sapacayo_Yordan_HostAddress = http://localhost:5257
+
+GET {{Lab11_Sapacayo_Yordan_HostAddress}}/api/roles
+Accept: application/json

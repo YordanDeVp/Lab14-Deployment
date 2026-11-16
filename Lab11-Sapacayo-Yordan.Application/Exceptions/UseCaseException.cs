@@ -1,0 +1,4 @@
+namespace Lab11_Sapacayo_Yordan.Application.Exceptions;
+
+public sealed class NotFoundException(string message) : Exception(message);
+public sealed class ConflictException(string message) : Exception(message);
