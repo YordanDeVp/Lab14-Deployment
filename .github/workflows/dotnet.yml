@@ -1,0 +1,39 @@
+name: Build and publish .NET application
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore ./Lab11-Sapacayo-Yordan.sln
+
+      - name: Build application
+        run: dotnet build ./Lab11-Sapacayo-Yordan.sln --configuration Release --no-restore
+
+      - name: Publish application
+        run: dotnet publish ./Lab11-Sapacayo-Yordan/Lab11-Sapacayo-Yordan.csproj --configuration Release --no-build --output ./published
+
+      - name: Upload published files
+        uses: actions/upload-artifact@v6
+        with:
+          name: ticketera-published
+          path: ./published/
