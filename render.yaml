@@ -6,6 +6,7 @@ services:
     region: virginia
     branch: main
     dockerfilePath: ./Dockerfile
+    healthCheckPath: /swagger/index.html
     envVars:
       - key: ConnectionStrings__DefaultConnection
         fromDatabase:
