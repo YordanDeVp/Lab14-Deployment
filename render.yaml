@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ticketera-api
+    runtime: docker
+    plan: free
+    region: virginia
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: ConnectionStrings__DefaultConnection
+        fromDatabase:
+          name: ticketera-db
+          property: connectionString
+      - key: Database__ApplyMigrationsOnStartup
+        value: "true"
+      - key: ASPNETCORE_FORWARDEDHEADERS_ENABLED
+        value: "true"
+
+databases:
+  - name: ticketera-db
+    plan: free
+    region: virginia
+    postgresMajorVersion: "18"
+    ipAllowList: []
